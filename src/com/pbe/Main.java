@@ -1,5 +1,7 @@
 package com.pbe;
 
+import java.util.Random;
+
 /** Study on Java Enumerations
  @author Pieter Beernink
  @version 1.0
@@ -57,6 +59,16 @@ package com.pbe;
 // 2. An enumeration can't be a superclass. I.e.: it can't be extended.
 // Key to remember: each of the enumeration constants is an object of the class in which it is defined.
 
+// Enumerations inherit Enum
+// All enumerations automatically inherit java.lang.Enum, which defines several methods. Three of them:
+// 1. final int ordinal() - obtains a value that indicates an enumeration constant's position in the list of constants, the 'ordinal value'
+// 2. final int compareTo(enum-type e) - to compare the ordinal value of two constants of the same enumeration
+// If the invoking constant has an ordinal value less than e's,  a negative value is returned.
+// If the two ordinal values are equal, zero is returned.
+// If the invoking constant has an ordinal value larger than e's, a positive value is returned.
+// 3. equals() - overrides equals() defined by Object and is used to compare for equality an enumeration constant with any other object
+// Note: compare two enumeration references for equality by using ==
+
 public class Main {
 
     // enumeration of error codes
@@ -82,6 +94,10 @@ public class Main {
         int getPrice() {
             return price;
         }
+    }
+
+    enum Apple {
+        Elstar, Junami, Kanzi, GoldenDelicious, Goudreinet;
     }
 
     public static void main(String[] args) {
@@ -146,6 +162,78 @@ public class Main {
         System.out.println("All bike prices:");
         for (Bike x : Bike.values())
             System.out.println(x + " costs " + x.getPrice() + " EUR");
-        
+        System.out.println();
+
+        // **********************
+        // Example demonstration of use of ordinal(), compareTo(), equals()
+        // **********************
+        System.out.println("Demonstration of ordinal(), compareTo(), equals()");
+        Apple ap, ap2, ap3;
+        System.out.println("All apple constants and their ordinal values:");
+        for (Apple x : Apple.values())
+            System.out.println(x + " " + x.ordinal());
+
+        ap = Apple.Junami;
+        ap2 = Apple.Kanzi;
+        ap3 = Apple.Junami;
+
+        System.out.println();
+        if (ap.compareTo(ap2) < 0)
+            System.out.println(ap + " comes before " + ap2);
+        if (ap.compareTo(ap2) > 0)
+            System.out.println(ap2 + " comes before " + ap);
+        if (ap.compareTo(ap3) == 0) // compares two enumerations for equality
+            System.out.println(ap + " equals " + ap3);
+
+        System.out.println();
+        if(ap.equals(ap2))
+            System.out.println("Error!");
+        if(ap.equals(ap3))
+            System.out.println(ap + " equals " + ap3);
+        if(ap == ap3) // compares two enumerations for equality
+            System.out.println(ap + " == " + ap3);
+        System.out.println();
+
+        // **********************
+        // Example of a decision maker using enumeration
+        // **********************
+        System.out.println("Decision maker using enumeration");
+
+        // Create new Question object, which contains enumeration of possible answers
+        Question q = new Question();
+
+        // Feed answer with an enum constant as generated/selected by q.ask()
+        answer(q.ask());
+        answer(q.ask());
+        answer(q.ask());
+        answer(q.ask());
+    }
+
+    // **********************
+    // Methods used in examples
+    // **********************
+
+    // Prints a result depending on the received enum constant
+    static void answer(Answer result) {
+        switch (result) {
+            case NO:
+                System.out.println("No");
+                break;
+            case YES:
+                System.out.println("Yes");
+                break;
+            case MAYBE:
+                System.out.println("Maybe");
+                break;
+            case LATER:
+                System.out.println("Later");
+                break;
+            case SOON:
+                System.out.println("Soon");
+                break;
+            case NEVER:
+                System.out.println("Never");
+                break;
+        }
     }
 }
